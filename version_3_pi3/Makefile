@@ -1,8 +1,8 @@
 CC=gcc
 EXE=board_test
 CFLAG= -I./include 
-SRC=main.c lib_i2c_eeprom.c  lib_lcd1602.c  lib_spi.c  lib_uart.c  
-OBJ=lib_i2c_eeprom.o lib_lcd1602.o lib_spi.o lib_uart.o bcm2835.o board.o
+SRC=main.c lib_i2c_eeprom.c  lib_lcd1602.c  lib_spi.c  lib_uart.c mcp3008.c 
+OBJ=lib_i2c_eeprom.o lib_lcd1602.o lib_spi.o lib_uart.o bcm2835.o board.o mcp3008.o
 VPATH=bcm2835_lib
 
 all: srcc tf

@@ -14,13 +14,13 @@ int board_init()
 
 	bcm2835_gpio_write(PIN_LED_01,LOW);
 	bcm2835_gpio_write(PIN_LED_02,LOW);
-
+    
 	// setup the buttons 
 	SET_INPUT(PIN_BTN_01);
 	SET_INPUT(PIN_BTN_02);
 	SET_PULLUP(PIN_BTN_01);
 	SET_PULLUP(PIN_BTN_02);
-
+    
 }
 
 

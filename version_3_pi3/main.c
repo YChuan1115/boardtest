@@ -48,7 +48,7 @@ int main(void){
 		},
 		{
 			.id = 3,
-			.name = "LED 04",
+			.name = "LED 03",
 			.phy_pin_num = 1,
 			.phy_pin_list = {PIN_LED_03},
 			.flag_ignore = 0,
@@ -112,8 +112,8 @@ int main(void){
 		{
 			.id = 10,
 			.name = "IR",
-			.phy_pin_num = 1,
-			.phy_pin_list = {PIN_IR_RX},
+			.phy_pin_num = 2,
+			.phy_pin_list = {PIN_IR_RX,PIN_IR_TX},
 			.flag_ignore = 0,
 			.test_func = test_func_ir,
 			.arg = NULL,
@@ -159,6 +159,15 @@ int main(void){
 			.phy_pin_list = {0},
 			.flag_ignore = 0,
 			.test_func = test_func_uart,
+			.arg = NULL,
+		},
+		{
+			.id = 15,
+			.name = "mcp3008",
+			.phy_pin_num = 0,
+			.phy_pin_list = {0},
+			.flag_ignore = 0,
+			.test_func = test_func_mcp3008,
 			.arg = NULL,
 		},
 	};

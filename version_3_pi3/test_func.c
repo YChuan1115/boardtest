@@ -6,6 +6,7 @@
 #include<lib_i2c_eeprom.h>
 #include<lib_spi.h>
 #include<lib_lcd1602.h>
+#include<mcp3008.h>
 //#include "bcm2835.h"
 char buff[30];
 int rres;
@@ -173,7 +174,10 @@ int test_func_ir         (board_device * self)
 	int break_flag = 0;
 	char _buff[30];int i ;
 	int pin_ir = self->phy_pin_list[0];
+	int pin_irT = self->phy_pin_list[1];
 	SET_INPUT(pin_ir);
+	SET_OUTPUT(pin_irT);
+	bcm2835_gpio_write(pin_irT,HIGH);
 	printf("START to TEST IR module: %s.\n", self->name );
 	printf("Please Send Some IR Signal to Pi board.\n");
 	printf("\npress any key to skip.\n");
@@ -208,6 +212,7 @@ int test_func_ir         (board_device * self)
 						printf("IR: %s test ok !\n", self->name );
 						self->Status = PASS;
 						break_flag = 1;
+						bcm2835_gpio_write(pin_irT,LOW);
 						break;
 					}
 				}
@@ -439,5 +444,42 @@ int test_func_uart       (board_device * self)
 	close_serial(&ama_tty);
 	return 1;
 }
+int test_func_mcp3008  (board_device * self)
+{
+	char _buff[30];
+     bcm2835_spi_begin();
+	// spi init 
 
+
+	printf("\n=======================================\n");
+	printf("The channel_0 of %s is given to High for pass this check!\n", self->name );
+	printf("Or press any key of keyboard to failed this check\n");
+	printf("=======================================\n");
+
+	while(1){
+		// check the keyboard button press 
+		int res = nonblock_read_stdin(_buff, 30);
+		if(res == -1){
+			printf("ERROR : select\n");
+			return -2;
+		}else if (res > 0){
+			self->Status = FAIL;
+			break;
+		}
+
+		// check the button 1 press
+		if(MCP3008_analog_read(0,0) == 1023) 
+		{
+			self->Status = PASS;
+			break;
+		}
+		else
+		{
+			printf("The channel_0 of MCP3008 is %d ,not 1024 \n", MCP3008_analog_read( 0,0));
+			usleep(500000);
+		}
+		
+	}
+	return (self->Status == PASS)?(1):(0);
+}
 

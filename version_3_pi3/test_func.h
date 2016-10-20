@@ -15,6 +15,7 @@ int test_func_eeprom     (board_device * self);
 int test_func_spi_flash   (board_device * self);
 int test_func_lcd        (board_device * self);
 int test_func_uart       (board_device * self);
+int test_func_mcp3008    (board_device * self);
 
 
 
