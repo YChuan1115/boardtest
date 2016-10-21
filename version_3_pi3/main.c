@@ -120,15 +120,34 @@ int main(void){
 		},
 		{
 			.id = 11,
+			.name = "DIP 01",
+			.phy_pin_num = 1,
+			.phy_pin_list = {PIN_DIP1},
+			.flag_ignore = 0,
+			.test_func = test_func_DIP,
+			.arg = NULL,
+		},
+		{
+			.id = 12,
+			.name = "DIP 02",
+			.phy_pin_num = 1,
+			.phy_pin_list = {PIN_DIP2},
+			.flag_ignore = 0,
+			.test_func = test_func_DIP,
+			.arg = NULL,
+		},
+		/*
+		{
+			.id = 11,
 			.name = "SPI FLASH",
 			.phy_pin_num = 0,
 			.phy_pin_list = {0},
 			.flag_ignore = 0,
 			.test_func = test_func_spi_flash,
 			.arg = (void *)id_list,
-		},
+		},*/
 		{
-			.id = 12,
+			.id = 13,
 			.name = "I2C EEPROM",
 			.phy_pin_num = 0,
 			.phy_pin_list = {0},
@@ -136,6 +155,25 @@ int main(void){
 			.test_func = test_func_eeprom,
 			.arg = NULL,
 		},
+		{
+			.id = 14,
+			.name = "PWM0",
+			.phy_pin_num = 1,
+			.phy_pin_list = {PIN_PWM0},
+			.flag_ignore = 0,
+			.test_func = test_func_pwm,
+			.arg = NULL,
+		},
+		{
+			.id = 15,
+			.name = "PWM1",
+			.phy_pin_num = 1,
+			.phy_pin_list = {PIN_PWM1},
+			.flag_ignore = 0,
+			.test_func = test_func_pwm,
+			.arg = NULL,
+		},
+		/*
 		{
 			.id = 13,
 			.name = "16x2 LCD",
@@ -160,7 +198,7 @@ int main(void){
 			.flag_ignore = 0,
 			.test_func = test_func_uart,
 			.arg = NULL,
-		},
+		},*/
 		{
 			.id = 15,
 			.name = "mcp3008",
