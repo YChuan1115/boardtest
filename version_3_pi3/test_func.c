@@ -233,6 +233,7 @@ int test_func_eeprom     (board_device * self)
 	for(i = 0 ;i<255 ;i++ ){
 		if(i2c_eeprom_write_byte(0,i,i) != BCM2835_I2C_REASON_OK){
 			self->Status = FAIL;
+                        printf("Check EEPROM Write Data Func : FAILED !!!\n");
 			return 0;
 		}
 	}
@@ -482,4 +483,71 @@ int test_func_mcp3008  (board_device * self)
 	}
 	return (self->Status == PASS)?(1):(0);
 }
+int test_func_DIP     (board_device * self)
+{
+	char _buff[30];
 
+	// setup the pin out setup 
+	int DIP_pin = self->phy_pin_list[0];
+	SET_INPUT(DIP_pin);
+
+	printf("\n=======================================\n");
+	printf("Switch %s twice for pass this check!\n", self->name );
+	printf("Or press any key of keyboard to failed this check\n");
+	printf("=======================================\n");
+    int state=bcm2835_gpio_lev(DIP_pin);
+	while(1){
+		// check the keyboard button press 
+		int res = nonblock_read_stdin(_buff, 30);
+		if(res == -1){
+			printf("ERROR : select\n");
+			return -2;
+		}else if (res > 0){
+			self->Status = FAIL;
+			break;
+		}
+		// check the switch chang
+		if(bcm2835_gpio_lev(DIP_pin)==!state)
+		{
+			self->Status = PASS;
+			break;
+		}	
+		
+	}
+	return (self->Status == PASS)?(1):(0);
+	
+	
+}
+int test_func_pwm        (board_device * self)
+{
+	char _buff[30];
+	int i = 0;
+	int channel ;
+	if(self->phy_pin_list[0] ==18)
+		channel=0;
+	else
+		channel=1;
+	// init the pin setup
+	int pwm_pin = self->phy_pin_list[0];
+	bcm2835_gpio_fsel(pwm_pin,BCM2835_GPIO_FSEL_ALT5);
+	bcm2835_pwm_set_clock(1920);   //set min frequence =19.2M/1920
+    bcm2835_pwm_set_mode(channel,1,1,0);   //(channel,PWM0 MSEN enable , PWM0 enable , revpolar)
+    bcm2835_pwm_set_range(channel,200);  //set period=20ms
+    bcm2835_pwm_set_data(channel,5);
+
+	printf(" %s transmit?[Y/n]:", self->name );
+
+	for(i = 0 ;i<30 ;i++ ) _buff[i] = '\0';
+	fgets(_buff, 30, stdin);
+
+	if((_buff[0] == '\n') || (_buff[0] == 'y') || (_buff[0] == 'Y'))
+		self->Status = PASS;
+
+	else if((_buff[0] == 'n') || (_buff[0] == 'N'))
+		self->Status = FAIL;
+	 bcm2835_gpio_write(pwm_pin, BCM2835_GPIO_FSEL_ALT2);
+     bcm2835_gpio_set_pud(pwm_pin,LOW);
+	 
+	
+	return (self->Status == PASS)?(1):(0);
+}

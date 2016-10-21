@@ -1544,7 +1544,7 @@ extern "C" {
       \param[in] markspace Set true if you want Mark-Space mode. 0 for Balanced mode.
       \param[in] enabled Set true to enable this channel and produce PWM pulses.
     */
-    extern void bcm2835_pwm_set_mode(uint8_t channel, uint8_t markspace, uint8_t enabled);
+    extern void bcm2835_pwm_set_mode(uint8_t channel, uint8_t markspace, uint8_t enabled,uint8_t revpolar);
 
     /*! Sets the maximum range of the PWM output.
       The data value can vary between 0 and this range to control PWM output

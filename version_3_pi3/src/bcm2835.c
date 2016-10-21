@@ -1205,7 +1205,7 @@ void bcm2835_pwm_set_clock(uint32_t divisor)
     bcm2835_peri_write(bcm2835_clk + BCM2835_PWMCLK_CNTL, BCM2835_PWM_PASSWRD | 0x11); /* Source=osc and enable */
 }
 
-void bcm2835_pwm_set_mode(uint8_t channel, uint8_t markspace, uint8_t enabled)
+void bcm2835_pwm_set_mode(uint8_t channel, uint8_t markspace, uint8_t enabled,uint8_t revpolar)
 {
   uint32_t control = bcm2835_peri_read(bcm2835_pwm + BCM2835_PWM_CONTROL);
 
@@ -1219,6 +1219,10 @@ void bcm2835_pwm_set_mode(uint8_t channel, uint8_t markspace, uint8_t enabled)
 	control |= BCM2835_PWM0_ENABLE;
       else
 	control &= ~BCM2835_PWM0_ENABLE;
+      if(revpolar)
+         control |= BCM2835_PWM0_REVPOLAR;
+      else
+         control &= ~BCM2835_PWM0_REVPOLAR;
     }
   else if (channel == 1)
     {
@@ -1230,6 +1234,10 @@ void bcm2835_pwm_set_mode(uint8_t channel, uint8_t markspace, uint8_t enabled)
 	control |= BCM2835_PWM1_ENABLE;
       else
 	control &= ~BCM2835_PWM1_ENABLE;
+      if(revpolar)
+         control |= BCM2835_PWM1_REVPOLAR;
+      else
+         control &= ~BCM2835_PWM1_REVPOLAR;
     }
 
   /* If you use the barrier here, wierd things happen, and the commands dont work */

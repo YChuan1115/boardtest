@@ -16,7 +16,7 @@
 // Constant and Parameter Setting
 //////////////////////////////////
 
-#define SLAVE_ADDR 0x50
+#define SLAVE_ADDR  0x51/*0x50*/
 
 
 
