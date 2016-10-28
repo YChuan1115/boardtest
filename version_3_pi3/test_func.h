@@ -12,12 +12,13 @@ int test_func_buzzer     (board_device * self);
 int test_func_realy      (board_device * self);
 int test_func_ir         (board_device * self);
 int test_func_eeprom     (board_device * self);
-int test_func_spi_flash  (board_device * self);
+int test_func_spi_flash   (board_device * self);
 int test_func_lcd        (board_device * self);
 int test_func_uart       (board_device * self);
 int test_func_mcp3008    (board_device * self);
 int test_func_DIP        (board_device * self);
 int test_func_pwm        (board_device * self);
+int test_func_lis3dh     (board_device * self);
 
 
 #endif 

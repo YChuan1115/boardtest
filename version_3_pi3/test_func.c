@@ -7,7 +7,8 @@
 #include<lib_spi.h>
 #include<lib_lcd1602.h>
 #include<mcp3008.h>
-//#include "bcm2835.h"
+#include<lis3dh.h>
+#include<bcm2835.h>
 char buff[30];
 int rres;
 
@@ -29,31 +30,31 @@ int rres;
 
 int test_func_led        (board_device * self)
 {
-	char _buff[30];
-	int i = 0;
-	//bcm2835_gpio_write(PIN_LED_01,HIGH);
-	// init the pin setup
-	int led_pin = self->phy_pin_list[0];
-	SET_OUTPUT(PIN_COM);
-	bcm2835_gpio_write(PIN_COM,HIGH);
-	SET_OUTPUT(led_pin);
+char _buff[30];
+        int i = 0;
+        //bcm2835_gpio_write(PIN_LED_01,HIGH);
+        // init the pin setup
+        int led_pin = self->phy_pin_list[0];
+        SET_OUTPUT(PIN_COM);
+        bcm2835_gpio_write(PIN_COM,HIGH);
+        SET_OUTPUT(led_pin);
 
 
-	printf("LED %s Light?[Y/n]:", self->name );
-	bcm2835_gpio_write(led_pin, HIGH);
+        printf("LED %s Light?[Y/n]:", self->name );
+        bcm2835_gpio_write(led_pin, HIGH);
 
-	for(i = 0 ;i<30 ;i++ ) _buff[i] = '\0';
-	fgets(_buff, 30, stdin);
+        for(i = 0 ;i<30 ;i++ ) _buff[i] = '\0';
+        fgets(_buff, 30, stdin);
 
-	if((_buff[0] == '\n') || (_buff[0] == 'y') || (_buff[0] == 'Y'))
-		self->Status = PASS;
+        if((_buff[0] == '\n') || (_buff[0] == 'y') || (_buff[0] == 'Y'))
+                self->Status = PASS;
 
-	else if((_buff[0] == 'n') || (_buff[0] == 'N'))
-		self->Status = FAIL;
+        else if((_buff[0] == 'n') || (_buff[0] == 'N'))
+                self->Status = FAIL;
 
-	bcm2835_gpio_write(led_pin, LOW);
-	
-	return (self->Status == PASS)?(1):(0);
+        bcm2835_gpio_write(led_pin, LOW);
+
+        return (self->Status == PASS)?(1):(0);
 }
 
 int test_func_button     (board_device * self)
@@ -105,16 +106,16 @@ int test_func_buzzer     (board_device * self)
 
 	SET_OUTPUT(buzzer_pin);
 	// buzzer off
-	bcm2835_gpio_write(buzzer_pin, HIGH);
+	DIGIT_WRITE(buzzer_pin, HIGH);
 
 
 	printf("Buzzer TEST: Do you hear the louder noize? [Y/n]:");
 
 	i = 500;
 	while(i--){
-		bcm2835_gpio_write(buzzer_pin, LOW);
+		DIGIT_WRITE(buzzer_pin, LOW);
 		usleep(1000);
-		bcm2835_gpio_write(buzzer_pin, HIGH);
+		DIGIT_WRITE(buzzer_pin, HIGH);
 		usleep(1000);
 	}
 
@@ -126,7 +127,7 @@ int test_func_buzzer     (board_device * self)
 	else if((_buff[0] == 'n') || (_buff[0] == 'N'))
 		self->Status = FAIL;
 
-	bcm2835_gpio_write(buzzer_pin, HIGH);
+	DIGIT_WRITE(buzzer_pin, HIGH);
 	SET_INPUT(buzzer_pin);
 	return (self->Status == PASS)?(1):(0);
 }
@@ -139,7 +140,7 @@ int test_func_realy      (board_device * self)
 	printf("TEST: Relay %s on and off\n", self->name );
 	printf("Do you hear the sound of switching relay? [Y/n]:\n");
 	SET_OUTPUT(pin_relay);
-	bcm2835_gpio_write(pin_relay, LOW);
+	DIGIT_WRITE(pin_relay, LOW);
 
 	while(1){
 		// check the keyboard button press 
@@ -159,10 +160,10 @@ int test_func_realy      (board_device * self)
 		// END check the keyboard input
 
 		// relay on 
-		bcm2835_gpio_write(pin_relay, HIGH);
+		DIGIT_WRITE(pin_relay, HIGH);
 		usleep(500000);
 		// realy off
-		bcm2835_gpio_write(pin_relay, LOW);
+		DIGIT_WRITE(pin_relay, LOW);
 		usleep(500000);
 	}
 	SET_INPUT(pin_relay);
@@ -174,10 +175,7 @@ int test_func_ir         (board_device * self)
 	int break_flag = 0;
 	char _buff[30];int i ;
 	int pin_ir = self->phy_pin_list[0];
-	int pin_irT = self->phy_pin_list[1];
 	SET_INPUT(pin_ir);
-	SET_OUTPUT(pin_irT);
-	bcm2835_gpio_write(pin_irT,HIGH);
 	printf("START to TEST IR module: %s.\n", self->name );
 	printf("Please Send Some IR Signal to Pi board.\n");
 	printf("\npress any key to skip.\n");
@@ -212,7 +210,6 @@ int test_func_ir         (board_device * self)
 						printf("IR: %s test ok !\n", self->name );
 						self->Status = PASS;
 						break_flag = 1;
-						bcm2835_gpio_write(pin_irT,LOW);
 						break;
 					}
 				}
@@ -229,11 +226,12 @@ int test_func_eeprom     (board_device * self)
 {
 	printf("START To Check the EEPROM....\n");
 	printf("use the default i2c port \n");
+	i2c_start();
 	int i = 0;
 	for(i = 0 ;i<255 ;i++ ){
 		if(i2c_eeprom_write_byte(0,i,i) != BCM2835_I2C_REASON_OK){
 			self->Status = FAIL;
-                        printf("Check EEPROM Write Data Func : FAILED !!!\n");
+			bcm2835_i2c_end();
 			return 0;
 		}
 	}
@@ -244,6 +242,7 @@ int test_func_eeprom     (board_device * self)
 			printf("========================================\n");
 			printf("Check EEPROM Read Data Func : FAILED !!!\n");
 			printf("========================================\n");
+			bcm2835_i2c_end();
 			return 0;
 		}
 		if(i != _byte){
@@ -251,11 +250,13 @@ int test_func_eeprom     (board_device * self)
 			printf("=======================================\n");
 			printf("Check EEPROM Read BAD Data : FAILED !!!\n");
 			printf("=======================================\n");
+			bcm2835_i2c_end();
 			return 0;
 		}
 	}
 	self->Status = PASS;
 	printf("Check EEPROM: OK !!!\n");
+	bcm2835_i2c_end();
 	return 1;
 }
 
@@ -551,3 +552,66 @@ int test_func_pwm        (board_device * self)
 	
 	return (self->Status == PASS)?(1):(0);
 }
+int test_func_lis3dh     (board_device * self)
+{
+	char _buff[30];
+	 int8_t address=0;
+     i2c_start();
+	// lis3dh init 
+    lis3dhData_t data;
+	data.x=0;
+	data.y=0;
+	data.z=0;
+    lis3dhInit();
+	printf("\n=======================================\n");
+	printf("Is %s match to LED\n", self->name );
+	printf("Or press any key of keyboard to failed this check\n");
+	printf("=======================================\n");
+    if (i2c_read_data_block(LIS3DH_ADDRESS, LIS3DH_REGISTER_WHO_AM_I, &address, 1)!=BCM2835_I2C_REASON_OK)
+	{printf("address fail\n");}
+    else
+	printf("address =%d\n",address);
+	while(1){
+		// check the keyboard button press 
+		int res = nonblock_read_stdin(_buff, 30);
+		
+		if(res == -1){
+			printf("ERROR : select\n");
+			return -2;
+		}else if (res > 0){
+			self->Status = FAIL;
+			break;
+		}
+
+		   if (lis3dhPoll(&data)!=BCM2835_I2C_REASON_OK)
+		   {
+			   printf("ERROR lis3dhPoll\n");
+			}
+		
+            printf("x= %d  \n", data.x);
+			printf("y= %d  \n", data.y);
+			printf("z= %d  \n", data.z);
+		if(data.x <0)
+		{
+			self->Status = PASS;
+			break;
+		}
+		else if(data.y <0)
+		{
+			self->Status = PASS;
+			break;
+		}
+		else if(data.z <0)
+		{
+			self->Status = PASS;
+			break;
+		}
+			usleep(300000);
+		
+		
+	}
+	
+	return (self->Status == PASS)?(1):(0);
+}
+
+

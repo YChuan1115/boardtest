@@ -407,7 +407,7 @@ void test_eeprom(checkList * chk_list){
 			chk_list->eeprom = -1;
 			unpass_sum += 1;
 			printf("===========================\n");
-			printf("Check EEPROM : FAILED !!!!!\n");
+			printf("Check EEPROM :1 FAILED !!!!!\n");
 			printf("===========================\n");
 			return ;
 		}
@@ -418,7 +418,7 @@ void test_eeprom(checkList * chk_list){
 			chk_list->eeprom = -1;
 			unpass_sum += 1;
 			printf("===========================\n");
-			printf("Check EEPROM : FAILED !!!\n");
+			printf("Check EEPROM :2 FAILED !!!\n");
 			printf("===========================\n");
 			return ;
 		}
@@ -426,7 +426,7 @@ void test_eeprom(checkList * chk_list){
 			chk_list->eeprom = -1;
 			unpass_sum += 1;
 			printf("===========================\n");
-			printf("Check EEPROM : FAILED !!!\n");
+			printf("Check EEPROM :3 FAILED !!!\n");
 			printf("===========================\n");
 			return ;
 		}

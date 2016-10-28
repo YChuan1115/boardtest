@@ -26,7 +26,6 @@ int main(void){
 	// === setup the devices 
 	// #####################################
 	uint8_t id_list[2] = {0xc2,0x12};
-	
 	board_device device_lists[] = {
 		{
 			.id = 1,
@@ -91,7 +90,7 @@ int main(void){
 			.test_func = test_func_button,
 			.arg = NULL,
 		},
-		{
+		/*{
 			.id = 8,
 			.name = "Buzzer",
 			.phy_pin_num = 1,
@@ -99,7 +98,7 @@ int main(void){
 			.flag_ignore = 0,
 			.test_func = test_func_buzzer,
 			.arg = NULL,
-		},
+		},*/
 		{
 			.id = 9,
 			.name = "Relay ",
@@ -189,23 +188,32 @@ int main(void){
 			.flag_ignore = 0,
 			.test_func = test_func_lcd,
 			.arg = NULL,
-		},
+		},*/
 		{
-			.id = 14,
+			.id = 16,
 			.name = "UART and PL2303",
 			.phy_pin_num = 0,
 			.phy_pin_list = {0},
 			.flag_ignore = 0,
 			.test_func = test_func_uart,
 			.arg = NULL,
-		},*/
+		},
 		{
-			.id = 15,
+			.id = 17,
 			.name = "mcp3008",
 			.phy_pin_num = 0,
 			.phy_pin_list = {0},
 			.flag_ignore = 0,
 			.test_func = test_func_mcp3008,
+			.arg = NULL,
+		},
+		{
+			.id = 18,
+			.name = "LIS3DH",
+			.phy_pin_num = 0,
+			.phy_pin_list = {0},
+			.flag_ignore = 0,
+			.test_func = test_func_lis3dh,
 			.arg = NULL,
 		},
 	};

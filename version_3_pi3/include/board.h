@@ -41,7 +41,6 @@
 #define PIN_PWM1      19	
 #endif
 
-
 #define SET_OUTPUT(x) bcm2835_gpio_fsel( x , BCM2835_GPIO_FSEL_OUTP)
 #define SET_INPUT(x)  bcm2835_gpio_fsel( x , BCM2835_GPIO_FSEL_INPT)
 #define SET_PULLUP(x) bcm2835_gpio_set_pud( x ,BCM2835_GPIO_PUD_UP)
