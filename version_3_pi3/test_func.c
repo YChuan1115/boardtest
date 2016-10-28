@@ -69,7 +69,7 @@ int test_func_button     (board_device * self)
 	SET_INPUT(btn_pin);
 
 	printf("\n=======================================\n");
-	printf("Press Button  twice for pass this check!\n", self->name );
+	printf("Press %s  twice for pass this check!\n", self->name );
 	printf("Or press any key of keyboard to failed this check\n");
 	printf("=======================================\n");
 
@@ -89,6 +89,7 @@ int test_func_button     (board_device * self)
 
 		// check the button 1 press twice !
 		if(count == 2){
+			printf("%s Succeed!!\n", self->name);
 			self->Status = PASS;
 			break;
 		}
@@ -422,7 +423,7 @@ int test_func_uart       (board_device * self)
 	// TEST ttyAMA0 Send Message to PL2303
 	printf("PL2303 send: %s\n",test_msg);
 	write(usb_tty.fd, test_msg,strlen(test_msg) );
-	usleep(200000);
+	usleep(/*200000*/100000);
 	read(ama_tty.fd, test_buf,30);
 	printf("ttyAMA0 Received: %s\n", test_buf);
 	//if((rres = strcmp(test_msg,test_buf)) < 0){
@@ -472,6 +473,7 @@ int test_func_mcp3008  (board_device * self)
 		// check the button 1 press
 		if(MCP3008_analog_read(0,0) == 1023) 
 		{
+			printf("The channel_0 of %s Succeed!!\n", self->name);
 			self->Status = PASS;
 			break;
 		}
@@ -493,7 +495,7 @@ int test_func_DIP     (board_device * self)
 	SET_INPUT(DIP_pin);
 
 	printf("\n=======================================\n");
-	printf("Switch %s twice for pass this check!\n", self->name );
+	printf("Switch %s  for pass this check!\n", self->name );
 	printf("Or press any key of keyboard to failed this check\n");
 	printf("=======================================\n");
     int state=bcm2835_gpio_lev(DIP_pin);
@@ -509,7 +511,8 @@ int test_func_DIP     (board_device * self)
 		}
 		// check the switch chang
 		if(bcm2835_gpio_lev(DIP_pin)==!state)
-		{
+		{   
+	        printf("%s Succeed!!\n", self->name);
 			self->Status = PASS;
 			break;
 		}	
@@ -564,7 +567,7 @@ int test_func_lis3dh     (board_device * self)
 	data.z=0;
     lis3dhInit();
 	printf("\n=======================================\n");
-	printf("Is %s match to LED\n", self->name );
+	printf("Let %s one of 3 axis be negative \n", self->name );
 	printf("Or press any key of keyboard to failed this check\n");
 	printf("=======================================\n");
     if (i2c_read_data_block(LIS3DH_ADDRESS, LIS3DH_REGISTER_WHO_AM_I, &address, 1)!=BCM2835_I2C_REASON_OK)
