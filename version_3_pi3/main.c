@@ -36,7 +36,7 @@ int main(void){
 			.test_func = test_func_led,
 			.arg = NULL,
 		},
-		{
+	/*	{
 			.id = 2,
 			.name = "LED 02",
 			.phy_pin_num = 1,
@@ -90,7 +90,7 @@ int main(void){
 			.test_func = test_func_button,
 			.arg = NULL,
 		},
-		/*{
+		{
 			.id = 8,
 			.name = "Buzzer",
 			.phy_pin_num = 1,
@@ -98,7 +98,7 @@ int main(void){
 			.flag_ignore = 0,
 			.test_func = test_func_buzzer,
 			.arg = NULL,
-		},*/
+		},
 		{
 			.id = 9,
 			.name = "Relay ",
@@ -134,7 +134,7 @@ int main(void){
 			.flag_ignore = 0,
 			.test_func = test_func_DIP,
 			.arg = NULL,
-		},
+		},*/
 		/*
 		{
 			.id = 11,
@@ -154,7 +154,7 @@ int main(void){
 			.test_func = test_func_eeprom,
 			.arg = NULL,
 		},
-		{
+		/*{
 			.id = 14,
 			.name = "PWM0",
 			.phy_pin_num = 1,
@@ -171,7 +171,7 @@ int main(void){
 			.flag_ignore = 0,
 			.test_func = test_func_pwm,
 			.arg = NULL,
-		},
+		},*/
 		/*
 		{
 			.id = 13,
@@ -198,7 +198,7 @@ int main(void){
 			.test_func = test_func_uart,
 			.arg = NULL,
 		},
-		{
+		/*{
 			.id = 17,
 			.name = "mcp3008",
 			.phy_pin_num = 0,
@@ -215,7 +215,7 @@ int main(void){
 			.flag_ignore = 0,
 			.test_func = test_func_lis3dh,
 			.arg = NULL,
-		},
+		},*/
 	};
 
 	

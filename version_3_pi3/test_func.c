@@ -227,12 +227,12 @@ int test_func_eeprom     (board_device * self)
 {
 	printf("START To Check the EEPROM....\n");
 	printf("use the default i2c port \n");
-	i2c_start();
-	int i = 0;
+	bcm2835_i2c_begin();
+        bcm2835_i2c_setClockDivider( BCM2835_I2C_CLOCK_DIVIDER_2500);
+        int i = 0;
 	for(i = 0 ;i<255 ;i++ ){
 		if(i2c_eeprom_write_byte(0,i,i) != BCM2835_I2C_REASON_OK){
 			self->Status = FAIL;
-			bcm2835_i2c_end();
 			return 0;
 		}
 	}
@@ -243,21 +243,20 @@ int test_func_eeprom     (board_device * self)
 			printf("========================================\n");
 			printf("Check EEPROM Read Data Func : FAILED !!!\n");
 			printf("========================================\n");
-			bcm2835_i2c_end();
+			
 			return 0;
 		}
 		if(i != _byte){
 			self->Status = FAIL;
 			printf("=======================================\n");
 			printf("Check EEPROM Read BAD Data : FAILED !!!\n");
+                        printf("%d,%d \n",i,_byte);
 			printf("=======================================\n");
-			bcm2835_i2c_end();
 			return 0;
 		}
 	}
 	self->Status = PASS;
 	printf("Check EEPROM: OK !!!\n");
-	bcm2835_i2c_end();
 	return 1;
 }
 
@@ -369,7 +368,7 @@ int test_func_uart       (board_device * self)
 	struct serial_port usb_tty;
 	struct serial_port ama_tty;
 	strcpy(usb_tty.device,"/dev/ttyUSB0");
-	strcpy(ama_tty.device,"/dev/ttyAMA0");
+	strcpy(ama_tty.device,"/dev/ttyAMA0"/*/dev/serial0*/);
 	if(-1 == open_serial_v2(&usb_tty)){
 		printf("===========================\n");
 		printf("PL2303 Open Faild!\n");
@@ -410,7 +409,7 @@ int test_func_uart       (board_device * self)
 		close_serial(&usb_tty);
 		close_serial(&ama_tty);
 		return 0;
-	}
+	} 
 
 	printf("========================================\n");
 	printf("ttyAMA0 Send message to PL2303 Succeed!!\n");

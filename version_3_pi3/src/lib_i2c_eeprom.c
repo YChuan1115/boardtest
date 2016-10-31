@@ -90,7 +90,7 @@ uint8_t i2c_eeprom_read_byte(uint8_t block, uint8_t addr,uint8_t * read_byte_buf
 				break;
 		}
 		if(stop_flat == 1) break;
-		usleep(1000);
+	 	usleep(1000);
 	}
 
 	res = bcm2835_i2c_read(read_byte_buff,1); 
