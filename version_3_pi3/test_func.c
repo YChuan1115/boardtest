@@ -9,6 +9,10 @@
 #include<mcp3008.h>
 #include<lis3dh.h>
 #include<bcm2835.h>
+///////////
+#include <unistd.h>
+#include <sys/types.h>
+
 char buff[30];
 int rres;
 
@@ -180,10 +184,19 @@ int test_func_ir         (board_device * self)
 	printf("START to TEST IR module: %s.\n", self->name );
 	printf("Please Send Some IR Signal to Pi board.\n");
 	printf("\npress any key to skip.\n");
+    ////////
+	SET_OUTPUT(self->phy_pin_list[1]);
+	int state=HIGH;
+    ////////
+	pid_t pid;
+	
+	pid = fork();
+    ////////
 
 	while(1){
 		// check keyboard input
 		int res = nonblock_read_stdin(_buff,30);
+		int i;
 		if(res == -1){
 			fprintf(stderr,"ERROR: select fail\n");
 			return -2;
@@ -191,11 +204,30 @@ int test_func_ir         (board_device * self)
 			self->Status = FAIL;
 			break;
 		}
-
-		// check ir 
-		if( check_ir_pin(pin_ir)  == BTN_DOWN_EDGE){
+        switch(pid)
+        {
+           case -1:
+             perror("fork failed");
+             exit(1);
+           case 0:
+		     for(i=0;i<2000;i++)
+			 {
+              bcm2835_gpio_write(self->phy_pin_list[1],state);
+			  state=!state;
+			  bcm2835_delayMicroseconds(20);
+			
+              }
+			  printf("transmit finish\n");
+			  exit(0);
+              break;
+           default:
+			  // check ir 
+			  
+		   if( check_ir_pin(pin_ir)  == BTN_DOWN_EDGE)
+		   {
 			struct timeval pre;
 			struct timeval now;
+			
 			gettimeofday(&pre,NULL);
 			while(1){
 				if(check_ir_pin(pin_ir) == BTN_DOWN_EDGE){
@@ -203,6 +235,13 @@ int test_func_ir         (board_device * self)
 					long delta_time = 1000000*( now.tv_sec - pre.tv_sec)+(now.tv_usec - pre.tv_usec);
 					pre.tv_sec = now.tv_sec; pre.tv_usec = now.tv_usec;
 					printf("dt:%6ld\n", delta_time);
+                             /*if(delta_time > 300000){
+                                                ///////////////////////////////////////
+                                                printf("IR: %s test ok !\n", self->name );
+                                                self->Status = PASS;
+                                                break_flag = 1;
+                                                break;
+                                        }*/
 				}else{
 					gettimeofday(&now,NULL);
 					long delta_time = 1000000*( now.tv_sec - pre.tv_sec)+(now.tv_usec - pre.tv_usec);
@@ -215,11 +254,15 @@ int test_func_ir         (board_device * self)
 					}
 				}
 			}
-		}
-		if(break_flag == 1)
+		   }
+             break;
+        }
+        if(break_flag == 1)
 			break;
+		
+		
 	}
-
+    
 	return (self->Status == PASS)?(1):(0);
 }
 
@@ -228,7 +271,7 @@ int test_func_eeprom     (board_device * self)
 	printf("START To Check the EEPROM....\n");
 	printf("use the default i2c port \n");
 	bcm2835_i2c_begin();
-        bcm2835_i2c_setClockDivider( BCM2835_I2C_CLOCK_DIVIDER_2500);
+        bcm2835_i2c_setClockDivider( BCM2835_I2C_CLOCK_DIVIDER_626);
         int i = 0;
 	for(i = 0 ;i<255 ;i++ ){
 		if(i2c_eeprom_write_byte(0,i,i) != BCM2835_I2C_REASON_OK){
@@ -368,7 +411,7 @@ int test_func_uart       (board_device * self)
 	struct serial_port usb_tty;
 	struct serial_port ama_tty;
 	strcpy(usb_tty.device,"/dev/ttyUSB0");
-	strcpy(ama_tty.device,"/dev/ttyAMA0"/*/dev/serial0*/);
+	strcpy(ama_tty.device,"/dev/ttyAMA0"/*/dev/serial0,ttyAMA0*/);
 	if(-1 == open_serial_v2(&usb_tty)){
 		printf("===========================\n");
 		printf("PL2303 Open Faild!\n");

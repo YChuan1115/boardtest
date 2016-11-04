@@ -42,8 +42,8 @@ int open_serial(struct serial_port * ser_port )
 	// set up the baud rate of the new termios 
 	//////////////////////////
 	tcgetattr(ser_port->fd, &ser_port->new_os);
-	cfsetispeed(&ser_port->new_os,B115200); // input speed 115200
-	cfsetospeed(&ser_port->new_os,B115200); // output speed 115200
+	cfsetispeed(&ser_port->new_os,B9600/*B115200*/); // input speed 115200
+	cfsetospeed(&ser_port->new_os,B9600/*B115200*/); // output speed 115200
 	// --------------------------- //
 
 	//////////////////////////
