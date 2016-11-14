@@ -107,7 +107,7 @@ int main(int argc, char **argv){
 			.flag_ignore = 0,
 			.test_func = test_func_realy,
 			.arg = NULL,
-		},
+		},*/
 		{
 			.id = 10,
 			.name = "IR",
@@ -117,7 +117,7 @@ int main(int argc, char **argv){
 			.test_func = test_func_ir,
 			.arg = NULL,
 		},
-		{
+		/*{
 			.id = 11,
 			.name = "DIP 01",
 			.phy_pin_num = 1,
@@ -248,13 +248,15 @@ int main(int argc, char **argv){
 		SET_OUTPUT(PIN_LED_03);
 		SET_OUTPUT(PIN_LED_04);
 		SET_OUTPUT(PIN_LED_05);
+		SET_OUTPUT(PIN_IR_TX);//IR emitter
+		bcm2835_gpio_write(PIN_IR_TX, HIGH);//IR emitter
 		SET_INPUT(PIN_BTN_01);
 		SET_INPUT(PIN_BTN_02);
 		SET_INPUT(PIN_DIP1);
 		SET_INPUT(PIN_DIP2);
-		//SET_OUTPUT(PIN_BUZZER);// buzzer off
+		SET_OUTPUT(PIN_BUZZER);// buzzer off
 		SET_OUTPUT(PIN_RELAY);
-	    //bcm2835_gpio_write(PIN_BUZZER, HIGH);
+	    bcm2835_gpio_write(PIN_BUZZER, LOW);
         
 		bcm2835_gpio_write(PIN_LED_01, LOW);
 		bcm2835_gpio_write(PIN_LED_02, LOW);
@@ -280,7 +282,7 @@ int main(int argc, char **argv){
 		     bcm2835_gpio_write(PIN_LED_03, HIGH);
 		     bcm2835_gpio_write(PIN_LED_04, HIGH);
 		     bcm2835_gpio_write(PIN_LED_05, HIGH);
-			 bcm2835_gpio_write(PIN_BUZZER, HIGH);
+			 bcm2835_gpio_write(PIN_BUZZER, LOW);
 			 bcm2835_gpio_write(PIN_RELAY, LOW);
 			 if(value3==0)
 			 {state[0]=0;
@@ -299,7 +301,7 @@ int main(int argc, char **argv){
 		     bcm2835_gpio_write(PIN_LED_03, LOW);
 		     bcm2835_gpio_write(PIN_LED_04, LOW);
 		     bcm2835_gpio_write(PIN_LED_05, LOW);
-			 bcm2835_gpio_write(PIN_BUZZER, HIGH);
+			 bcm2835_gpio_write(PIN_BUZZER, LOW);
 			 bcm2835_gpio_write(PIN_RELAY, HIGH);
 		     usleep(500000);
 		     // realy off
@@ -312,7 +314,7 @@ int main(int argc, char **argv){
 			 {state[1]=1;
 		      bcm2835_gpio_write(PIN_RELAY, LOW);}
 		 }
-	     else if (value1==1&&value2==0&&state[2]==-1)
+	     else if (value1==1&&value2==1&&state[2]==-1)
 		 {
 			 bcm2835_gpio_write(PIN_LED_01, LOW);
 		     bcm2835_gpio_write(PIN_LED_02, LOW);
@@ -320,19 +322,15 @@ int main(int argc, char **argv){
 		     bcm2835_gpio_write(PIN_LED_04, LOW);
 		     bcm2835_gpio_write(PIN_LED_05, LOW);
 			 bcm2835_gpio_write(PIN_RELAY, LOW);
-			 i = 500;
-	         while(i--){
-		    bcm2835_gpio_write(PIN_BUZZER, LOW);
-		    usleep(1000);
+			 
 		    bcm2835_gpio_write(PIN_BUZZER, HIGH);
-		    usleep(1000);
-	         }
+		    
 			 if(value3==0)
 			 {state[2]=1;
-		      bcm2835_gpio_write(PIN_BUZZER, HIGH);}
+		      bcm2835_gpio_write(PIN_BUZZER, LOW);}
 		     else if (value4==0)
 			 {state[2]=0;
-		      bcm2835_gpio_write(PIN_BUZZER, HIGH);}
+		      bcm2835_gpio_write(PIN_BUZZER, LOW);}
 		 
 		 }
 		 else
@@ -344,7 +342,7 @@ int main(int argc, char **argv){
 		     bcm2835_gpio_write(PIN_LED_04, LOW);
 		     bcm2835_gpio_write(PIN_LED_05, LOW);
 			 bcm2835_gpio_write(PIN_RELAY, LOW);
-			 bcm2835_gpio_write(PIN_BUZZER, HIGH);
+			 bcm2835_gpio_write(PIN_BUZZER, LOW);
 		 }
 		 if (state[0]!=-1&&state[1]!=-1&&state[2]!=-1)
 		 {
@@ -379,7 +377,7 @@ int main(int argc, char **argv){
 		}
 	    else if (i==2)
 		{
-		  if (state[i]==1)
+		  if (state[i]==0)
 	      printf("|    |               BUZZER|                    | PASS               |\n");	
 		  else
 		  printf("|    |               BUZZER|                    | FAIL               |\n");
